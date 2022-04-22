@@ -97,7 +97,7 @@ const Header = () => {
     <div className={classes.header}>
       <div className={classes.title}>
         <img src={darkTheme ? iconWhite : icon} className={classes.logo}/>
-        <a>Newsify</a>
+        <a href='/'>Newsify</a>
       </div>
       
       <FormGroup>
