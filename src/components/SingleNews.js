@@ -68,12 +68,13 @@ const SingleNews = ({news}) => {
                 href={news.url} 
                 className={classes.link}
                 target="_blank"
+                rel="noreferrer"
             >
                 {news.title}
             </a>
         </div>
 
-        <a href={news.url} target='_blank'>
+        <a href={news.url} target='_blank' rel="noreferrer">
         <div className={classes.source}>
         </div>
         </a>

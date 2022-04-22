@@ -5,7 +5,7 @@ import { DarkThemeState } from '../ThemeContext';
 
 const Footer = () => {
 
-    const {darkTheme, setDarkTheme} = DarkThemeState();
+    const { darkTheme } = DarkThemeState();
 
     const useStyles = makeStyles(() => ({
         container: {
