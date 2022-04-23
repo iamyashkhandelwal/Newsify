@@ -51,8 +51,9 @@ const TrendingNews = ({country, category, onCategoryChange, onCountryChange}) =>
     const fetchTopHeadlines = async () => {
       //fetching top 40 headlines
       const result1 = await axios.get(TopHeadlines(country, category, 1));
+      console.log(result1);
       // console.log(result1.status); //check for status and then proceed
-      if(result1?.status === 'error')
+      if(result1?.status === 426)
         return(<h3>{result1.message}</h3>)
       let result2 = [];
       if(result1.data.totalResults > 20)
