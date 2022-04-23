@@ -16,6 +16,7 @@ const TrendingNews = ({country, category, onCategoryChange, onCountryChange}) =>
 
   const [newsData, setNewsData] = useState([]);
   const [page, setPage] = useState(1);
+  const [errors, setErrors] = useState('')
 
   const {darkTheme} = DarkThemeState();
 
@@ -46,28 +47,32 @@ const TrendingNews = ({country, category, onCategoryChange, onCountryChange}) =>
   }))
 
   const classes = useStyles();
-
+  
   useEffect(() => {
     const fetchTopHeadlines = async () => {
-      //fetching top 40 headlines
-      const result1 = await axios.get(TopHeadlines(country, category, 1));
-      // console.log(result1);
-      // console.log(result1.status); //check for status and then proceed
-      if(result1?.status === 200) {
-        let result2 = [];
-        if(result1.data.totalResults > 20)
-          result2 = await axios.get(TopHeadlines(country, category, 2))
+      try {
+          //fetching top 40 headlines
+          const result1 = await axios.get(TopHeadlines(country, category, 1));
+          console.log(result1);
+          // console.log(result1.status); //check for status and then proceed
+          if(result1?.status === 200) {
+            console.log(result1);
+            let result2 = [];
+            if(result1.data.totalResults > 20)
+              result2 = await axios.get(TopHeadlines(country, category, 2))
 
-        const finalResult = [...result1.data.articles, ...result2.data.articles];
-        // console.log(finalResult);
+            const finalResult = [...result1.data.articles, ...result2.data.articles];
+            // console.log(finalResult);
 
-        setNewsData(finalResult);
+            setNewsData(finalResult);
+          }
+      } catch (error) {
+        // console.log(error.response);
+        // console.log(error.response.status);
+        // console.log(error.response.data.message);
+        setErrors(error.response.data.message);
       }
-      else {
-        console.log(result1);
-        return(<h3>{result1.status}</h3>)
-      }
-      
+    
     }
 
     fetchTopHeadlines();
@@ -75,6 +80,15 @@ const TrendingNews = ({country, category, onCategoryChange, onCountryChange}) =>
 
   console.log(newsData);
   // console.log(newsData[0].content);
+  // console.log(errors);
+  if(errors !== '') {
+    console.log('error detected');
+    return (
+      <div className={classes.newsContainer}>
+        <h3>{errors}</h3>
+      </div>
+    )
+  }
 
   return (
     <>

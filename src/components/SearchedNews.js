@@ -31,20 +31,28 @@ const SearchedNews = ({input}) => {
   useEffect(() => {
     const fetchNews = async () => {
       const {data} = await axios.get(SearchByInput(input, 1));
+      console.log(data);
+      if(data.totalResults) {
+        let maxPages = data.totalResults%20 === 0 ? ~~(data.totalResults/20) : ~~(data.totalResults/20) + 1;
 
-      let maxPages = data.totalResults%20 === 0 ? ~~(data.totalResults/20) : ~~(data.totalResults/20) + 1;
+        //because as a developer we can fetch at max 5 pages
+        let maxLimit = Math.min(maxPages, 5);
+        let finalData = [...data.articles];
+        for(let page=2; page<=maxLimit; page++){
+          const {data} = await axios.get(SearchByInput(input, page));
 
-      //because as a developer we can fetch at max 5 pages
-      let maxLimit = Math.min(maxPages, 5);
-      let finalData = [...data.articles];
-      for(let page=2; page<=maxLimit; page++){
-        const {data} = await axios.get(SearchByInput(input, page));
+          finalData = [...finalData, ...data.articles]
+        }
 
-        finalData = [...finalData, ...data.articles]
+        // console.log(finalData);
+        setSearchedNewsData(finalData);
+      }
+      else {
+        console.log('inside else');
+        setSearchedNewsData('No Results Found!!')
       }
 
-      // console.log(finalData);
-      setSearchedNewsData(finalData);
+      
     }
 
     // fetchNews();
@@ -61,11 +69,20 @@ const SearchedNews = ({input}) => {
     }
   }, [input])
 
+  if(searchedNewsData === 'No Results Found!!') {
+    return(
+      <div className={classes.newsContainer}>
+        <h3>No Result Found!!</h3>
+      </div>
+    )
+  }
+
   return (
     <>
       {/* <div>News searched for {input}</div> */}
 
       <div className={classes.newsContainer}>
+
     {
       !searchedNewsData.length 
       ? <CircularProgress />
