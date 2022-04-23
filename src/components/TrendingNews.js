@@ -51,18 +51,23 @@ const TrendingNews = ({country, category, onCategoryChange, onCountryChange}) =>
     const fetchTopHeadlines = async () => {
       //fetching top 40 headlines
       const result1 = await axios.get(TopHeadlines(country, category, 1));
-      console.log(result1);
+      // console.log(result1);
       // console.log(result1.status); //check for status and then proceed
-      if(result1?.status === 426)
-        return(<h3>{result1.message}</h3>)
-      let result2 = [];
-      if(result1.data.totalResults > 20)
-        result2 = await axios.get(TopHeadlines(country, category, 2))
+      if(result1?.status === 200) {
+        let result2 = [];
+        if(result1.data.totalResults > 20)
+          result2 = await axios.get(TopHeadlines(country, category, 2))
 
-      const finalResult = [...result1.data.articles, ...result2.data.articles];
-      // console.log(finalResult);
+        const finalResult = [...result1.data.articles, ...result2.data.articles];
+        // console.log(finalResult);
 
-      setNewsData(finalResult);
+        setNewsData(finalResult);
+      }
+      else {
+        console.log(result1);
+        return(<h3>{result1.status}</h3>)
+      }
+      
     }
 
     fetchTopHeadlines();
